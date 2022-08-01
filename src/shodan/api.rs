@@ -1,3 +1,13 @@
+use hyper::{body::Buf};
+use hyper::{Body, Method, Client, Request};
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct APIInfo {}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Host {}
+
 pub struct ShodanClient {
     api_key: &'static str,
 }
@@ -11,15 +21,38 @@ impl ShodanClient {
         }
     }
 
-    pub fn api_info(&self) {
-        println!("shodan api info")
+    pub async fn api_info(&self) {
+        let uri: hyper::Uri = format!("{}/api-info?key={}", BASE_URI, self.api_key);
+        let client = Client::new();
+        let resp = client.get(uri).await?;
+        let body = hyper::body::aggregate(resp).await?;
+
+        let result = serde_json::from_reader(body.reader())?;
+        println!("{}", result);
     }
 
-    pub fn search_host(&self, host: &str) {
-        println!("{}", host);
+    pub async fn search_host(&self, host: &str) {
+        let uri:hyper::Uri = format!("{}/shodan/host/{}?key={}", BASE_URI, host, self.api_key);
+        println!("current uri = {}", uri);
+        let client = Client::new();
+
+        let resp = client.get(uri).await?;
+        let body = hyper::body::aggregate(resp).await?;
+
+        let result = serde_json::from_reader(body.reader())?;
+        println!("{}", result);
     }
 
-    pub fn search_domain(&self, domain: &str) {
-        println!("{}", domain);
+    pub async fn search_domain(&self, domain: &str) {
+        let uri:hyper::Uri = format!("{}/shodan/host/search?key={}&query={}", BASE_URI, self.api_key, domain);
+        println!("current uri = {}", uri);
+
+        let client = Client::new();
+        let resp = client.get(uri).await?;
+        let body = hyper::body::aggregate(resp).await?;
+
+        let result = serde_json::from_reader(body.reader())?;
+
+        println!("{:?}", result);
     }
 }
