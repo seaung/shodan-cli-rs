@@ -21,6 +21,7 @@ impl Options {
                 .help("enter a target domain.")
             ).get_matches();
 
+        let shodan_client = ShodanClient::new("shoan-api");
         match matches.subcommand() {
             ("search", Some(search_match)) => {
                 let host = match search_match.value_of("host") {
@@ -30,8 +31,7 @@ impl Options {
                         std::process::exit(1);
                     }
                 };
-
-                ShodanClient::new("").search_host(host)
+                shodan_client.search_host(host);
             },
             ("domain", Some(domain_match)) => {
                 let domain = match domain_match.value_of("domain") {
@@ -42,10 +42,10 @@ impl Options {
                     }
                 };
 
-                ShodanClient::new("").search_domain(domain)
+                let result = shodan_client.search_domain(domain);
             },
             ("info", Some(_)) => {
-                ShodanClient::new("").api_info()
+                let result = shodan_client.api_info();
             },
             _ => {}
         }
