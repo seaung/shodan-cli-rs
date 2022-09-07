@@ -32,7 +32,7 @@ pub struct Host {
 	pub isp: Option<String>, 
 	pub asn: Option<String>, 
 	pub hostnames: Option<String>,
-	pub location: Option<HostLocation>,
+	pub location: Option<Vec<HostLocation>>,
 	pub ip: Option<u64>, 
 	pub domains: Option<String>, 
 	pub org: Option<String>, 
@@ -43,7 +43,7 @@ pub struct Host {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HostSearch {
-    pub matches: Option<Host>,
+    pub matches: Option<Vec<Host>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -51,7 +51,7 @@ pub struct Domains {
 	pub domain: Option<String>,
 	pub tags: Option<String>,
 	pub subdomains: Option<String>,
-	pub data: Option<DomainData>,
+	pub data: Option<Vec<DomainData>>,
 	pub more: Option<String>,
 }
 

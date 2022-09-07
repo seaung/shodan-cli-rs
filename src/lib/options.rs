@@ -10,7 +10,7 @@ impl Options {
             .version("#dev 0.0.0")
             .author("seaung")
             .about("shodan cli tools")
-            .subcommand(SubCommand::with_name("info")
+            .subcommand(SubCommand::with_name("info").help("print shodan api help information.")
             )
             .subcommand(SubCommand::with_name("search")
                 .arg(Arg::with_name("host"))
